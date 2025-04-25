@@ -1,33 +1,27 @@
 /**
- * Represents a flashcard with a question, answer, and memory hooks.
+ * Represents a flashcard with a question and answer.
  */
 export interface Flashcard {
   /**
    * The question part of the flashcard.
    */
   question: string;
+
   /**
    * The answer part of the flashcard.
    */
   answer: string;
-  /**
-   * Memory hooks to help remember the answer.
-   */
-  memoryHooks: string[];
 }
 
 /**
- * Asynchronously exports a single flashcard to CSV format.
- *
- * @param flashcard The flashcard to export.
- * @returns A promise that resolves to a CSV string representing the flashcard.
+ * Exports a single flashcard to CSV format.
+ * @param flashcard - The flashcard to export.
+ * @returns A CSV string representing the flashcard.
  */
 export async function exportFlashcardToCsv(flashcard: Flashcard): Promise<string> {
   const question = escapeCsvField(flashcard.question);
   const answer = escapeCsvField(flashcard.answer);
-  const memoryHooks = escapeCsvField(flashcard.memoryHooks.join('; ')); // Join memory hooks with semicolon
-
-  const csvString = `Question,Answer,Memory Hooks\n${question},${answer},${memoryHooks}\n`;
+  const csvString = `Question,Answer\n${question},${answer}\n`;
   return csvString;
 }
 
@@ -38,16 +32,14 @@ export async function exportFlashcardToCsv(flashcard: Flashcard): Promise<string
  * @returns A promise that resolves to a CSV string representing all flashcards.
  */
 export async function exportFlashcardsToCsv(flashcards: Flashcard[]): Promise<string> {
-  let csvString = 'Question,Answer,Memory Hooks\n';
+  let csvString = 'Question,Answer\n';
   flashcards.forEach(flashcard => {
     const question = escapeCsvField(flashcard.question);
     const answer = escapeCsvField(flashcard.answer);
-    const memoryHooks = escapeCsvField(flashcard.memoryHooks.join('; ')); // Join memory hooks with semicolon
-    csvString += `${question},${answer},${memoryHooks}\n`;
+    csvString += `${question},${answer}\n`;
   });
   return csvString;
 }
-
 /**
  * Helper function to escape CSV fields that contain commas or double quotes.
  * @param field The field to escape.
