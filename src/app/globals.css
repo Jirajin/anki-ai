@@ -9,8 +9,8 @@ body {
 
 @layer base {
   :root {
-    --background: 220 14% 8%;
-    --foreground: 220 14% 92%;
+    --background: 220 14% 8%; /* Slate Gray: #2C2C2C */
+    --foreground: 220 14% 92%; /* Light Gray: #E4E4E4 */
     --muted: 220 13% 28%;
     --muted-foreground: 220 8% 64%;
     --popover: 220 13% 28%;
@@ -19,21 +19,21 @@ body {
     --card-foreground: 220 8% 64%;
     --border: 220 10% 35%;
     --input: 220 13% 28%;
-    --primary: 157 74% 64%;
+    --primary: 211 34% 82%; /* Light Cyan: #A8DADC */
     --primary-foreground: 220 14% 8%;
-    --secondary: 157 74% 64%;
+    --secondary: 257 100% 85%; /* Soft Pink: #FFC1CC */
     --secondary-foreground: 220 14% 8%;
-    --accent: 257 23% 45%;
+    --accent: 257 31% 76%; /* Lavender: #B39CD0 */
     --accent-foreground: 220 14% 8%;
     --destructive: 0 63% 56%;
     --destructive-foreground: 210 20% 98%;
-    --ring: 157 74% 64%;
+    --ring: 257 31% 76%; /* Lavender: #B39CD0 */
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 220 14% 8%;
-    --foreground: 220 14% 92%;
+    --background: 211 11% 17%; /* Slate Gray: #2C2C2C */
+    --foreground: 210 7% 89%; /* Light Gray: #E4E4E4 */
     --muted: 220 13% 28%;
     --muted-foreground: 220 8% 64%;
     --popover: 220 13% 28%;
@@ -42,15 +42,15 @@ body {
     --card-foreground: 220 8% 64%;
     --border: 220 10% 35%;
     --input: 220 13% 28%;
-    --primary: 157 74% 64%;
+    --primary: 168 31% 77%; /* Light Cyan: #A8DADC */
     --primary-foreground: 220 14% 8%;
-    --secondary: 157 74% 64%;
+    --secondary: 333 100% 85%; /* Soft Pink: #FFC1CC */
     --secondary-foreground: 220 14% 8%;
-    --accent: 257 23% 45%;
+    --accent: 249 26% 70%; /* Lavender: #B39CD0 */
     --accent-foreground: 220 14% 8%;
     --destructive: 0 63% 56%;
     --destructive-foreground: 210 20% 98%;
-    --ring: 157 74% 64%;
+    --ring: 249 26% 70%; /* Lavender: #B39CD0 */
     --radius: 0.5rem;
   }
 }
@@ -63,3 +63,4 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
