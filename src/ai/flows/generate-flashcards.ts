@@ -23,15 +23,21 @@ export type GenerateFlashcardsInput = z.infer<typeof GenerateFlashcardsInputSche
 const GenerateFlashcardsOutputSchema = z.object({
   flashcards: z.array(
     z.object({
-      question: z.string().describe('The question for the flashcard.'),
-      answer: z.string().describe('The answer to the question.'),
-      memoryHooks: z.array(z.string()).describe('Tips and memory hooks to remember the answer.'),
+      question: z
+        .string()
+        .describe('The question for the flashcard, potentially including markdown for **keyword** highlighting. If extracted directly from source, this will be the original question.'),
+      answer: z
+        .string()
+        .describe('The answer to the question. If generated, includes a separate paragraph with memory hooks/tips focused on visualization/mind-mapping. If extracted, this will be the original answer.'
+        ),
     })
-  ).describe('The generated flashcards.'),
+  ).describe('The generated or extracted flashcards.'),
 });
 export type GenerateFlashcardsOutput = z.infer<typeof GenerateFlashcardsOutputSchema>;
 
-export async function generateFlashcards(input: GenerateFlashcardsInput): Promise<GenerateFlashcardsOutput> {
+export async function generateFlashcards(
+  input: GenerateFlashcardsInput
+): Promise<GenerateFlashcardsOutput> {
   return generateFlashcardsFlow(input);
 }
 
@@ -47,26 +53,42 @@ const prompt = ai.definePrompt({
     }),
   },
   output: {
-    schema: z.object({
-      flashcards: z.array(
-        z.object({
-          question: z.string().describe('The question for the flashcard.'),
-          answer: z.string().describe('The answer to the question.'),
-          memoryHooks: z.array(z.string()).describe('Tips and memory hooks to remember the answer.'),
-        })
-      ).describe('The generated flashcards.'),
-    }),
+    schema: GenerateFlashcardsOutputSchema, // Use the defined output schema
   },
-  prompt: `You are an expert educator specializing in creating flashcards for students.
+  // Reverted Prompt: Includes rules for highlights, existing Q&A (verbatim), and separate paragraph visualization/mind-map hooks
+  prompt: `You are an expert educator specializing in creating effective anki flashcards using cognitive science principles.
 
-Analyze the provided textbook content and generate a set of flashcards with relevant questions, answers, memory hooks, and tips to help students learn the material efficiently. Automatically determine the most effective flashcard types, memory hooks, and tips for each piece of information.
+**Task:** Analyze the provided document and generate/extract flashcards based on its content, following specific rules.
 
-Document: {{media url=documentDataUri}}
+**Input Document:** {{media url=documentDataUri}}
 
-Output the flashcards in JSON format. Ensure that the questions are clear, concise, and directly related to the content. The answers should be accurate and comprehensive. The memoryHooks should provide helpful tips and techniques for memorization.
+**Rules for Flashcard Creation:**
 
-Ensure the outputted JSON can be parsed by Javascript's JSON.parse.
-`, 
+1.  **Language:** Detect the primary language of the input document. Generate/extract all flashcard content (question, answer, memory hook) in this **same language**.
+2.  **Prioritize Highlights:** First, look for any **highlighted text** in the document. If highlights are present, focus **exclusively** on the highlighted content for creating flashcards.
+3.  **Extract Existing Q&A:** Search the document (especially within highlighted sections, if any) for existing **question-and-answer pairs** (e.g., chapter review questions, quizzes). If found, extract these **verbatim** into the flashcard format.
+4.  **Generate New Flashcards:** For content that is **highlighted but NOT part of an existing Q&A pair**, OR if there are **no highlights**, generate new flashcards based on the core concepts.
+    *   For **Generated** Flashcards ONLY:
+        a.  Create a clear, concise **question** in the detected language. Identify 1-3 **crucial keywords** within the question and format them using **markdown bold** (e.g., \`**keyword**\`).
+        b.  Provide an accurate and comprehensive **answer** in the detected language.
+        c.  After the main answer, add a **new paragraph** within the *same answer field*. Start this paragraph with "💡 **Memory Hook:**" or "🧠 **Tip:**" (or the localized equivalent). Provide a brief, helpful aid focused on **visualization** (e.g., create a mental image) or **mind-mapping** (e.g., connect this concept to others) for long-term retention. Ensure a proper paragraph break (a literal newline in the JSON string), not escaped characters like 
+.
+5.  **Output:** Format all extracted or generated flashcards as a JSON array according to the schema. Ensure valid JSON parseable by Javascript's JSON.parse.
+
+**Output Schema:**
+{
+  "flashcards": [
+    {
+      "question": "<question_string (bolded keywords if generated, verbatim if extracted)>",
+      "answer": "<answer_string (if generated)>
+
+<localized_memory_hook_prefix> <visualization/mind-map hook_text>" 
+      // OR if extracted: "<answer_string (verbatim)>"
+    },
+    ...
+  ]
+}
+`,
 });
 
 const generateFlashcardsFlow = ai.defineFlow<
@@ -78,5 +100,9 @@ const generateFlashcardsFlow = ai.defineFlow<
   outputSchema: GenerateFlashcardsOutputSchema,
 }, async input => {
   const {output} = await prompt(input);
-  return output!;
+  // Ensure output is not null before returning
+  if (!output) {
+    throw new Error("Failed to generate flashcards: AI output was null.");
+  }
+  return output;
 });
