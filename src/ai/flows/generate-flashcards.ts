@@ -58,7 +58,7 @@ const prompt = ai.definePrompt({
   // Reverted Prompt: Includes rules for highlights, existing Q&A (verbatim), and separate paragraph visualization/mind-map hooks
   prompt: `You are an expert educator specializing in creating effective anki flashcards using cognitive science principles.
 
-**Task:** Analyze the provided document and generate/extract flashcards based on its content, following specific rules.
+**Task:** Analyze the provided document and generate/extract as many flashcards as possible based on its content, following specific rules.
 
 **Input Document:** {{media url=documentDataUri}}
 
