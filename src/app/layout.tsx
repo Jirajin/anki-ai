@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'FlashGenius',
-  description: 'Turn textbook images/PDFs into expertly crafted flashcards with AI.',
+  title: 'Anki-AI',
+  description: 'Turn textbook images/PDFs into expertly crafted flashcards with AI. A charity project by J.I. Rajin',
 };
 
 export default function RootLayout({
