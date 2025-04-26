@@ -71,7 +71,7 @@ const prompt = ai.definePrompt({
     *   For **Generated** Flashcards ONLY:
         a.  Create a clear, concise **question** in the detected language. Identify 1-3 **crucial keywords** within the question and format them using **markdown bold** (e.g., \`**keyword**\`).
         b.  Provide an accurate and comprehensive **answer** in the detected language.
-        c.  After the main answer, start a new **new paragraph** within the *same answer field*. Start this paragraph with "💡 **Memory Hook:**" or "🧠 **Tip:**" (or the localized equivalent). Your task is to suggest memory hooks, mnemonics, or associations to help the user better remember and recall the information.
+        c.  After the main answer, start a new **new paragraph** within the *same answer field*. Start this paragraph with "💡 **Memory Hook:**". Your task is to suggest science based memory hooks, give tips to remember this flashcards answer, mnemonics, or associations to help the user better remember and recall the information. Also build connection with other flashcards if there is any.
 .
 5.  **Output:** Format all extracted or generated flashcards as a JSON array according to the schema. Ensure valid JSON parseable by Javascript's JSON.parse.
 
