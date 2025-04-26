@@ -1,4 +1,4 @@
-# **App Name**: FlashGenius
+# **App Name**: AnkiAI
 
 ## Core Features:
 
